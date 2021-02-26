@@ -7,29 +7,34 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.TextView
 import android.widget.Button
+import android.widget.EditText
 import java.util.Locale
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
-    private val START_TIME = 10000
+    private val startTime = 10000
 
     private lateinit var mTextViewCountDown: TextView
     private lateinit var mButtonStartPause: Button
     private lateinit var getmButtonReset: Button
+    private lateinit var time: EditText
 
     private lateinit var mCountDownTimer: CountDownTimer
-    private var mTimerRunning by Delegates.notNull<Boolean>()
+    private var mTimerRunning = false
 
-    private var mTimeLeftInMillis = START_TIME
+    private var mTimeLeftInMillis = startTime
 
+    // Androidアプリを起動した際に一番最初に読み込まれる
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // R は プロジェクト内のRクラスを呼び出している
+        // UIの部品と接続をしている
         mTextViewCountDown = findViewById(R.id.text_view_countdown)
         mButtonStartPause = findViewById(R.id.button_start_pause)
         getmButtonReset = findViewById(R.id.button_reset)
+        time = findViewById(R.id.selectTime)
 
         // クリックされた時のアクション
         mButtonStartPause.setOnClickListener {
@@ -55,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                 mTimeLeftInMillis = millisUntilFinished.toInt()
                 updateCountDownText()
             }
+
             override fun onFinish() {
                 // stop timer
                 mTimerRunning = false
@@ -74,12 +80,12 @@ class MainActivity : AppCompatActivity() {
     private fun pauseTimer() {
         mCountDownTimer.cancel()
         mTimerRunning = false
-        mButtonStartPause.text = "reset"
+        mButtonStartPause.text = "start"
         getmButtonReset.visibility = View.VISIBLE
     }
 
     private fun resetTimer() {
-        mTimeLeftInMillis = START_TIME
+        mTimeLeftInMillis = startTime
         updateCountDownText()
         mButtonStartPause.visibility = View.VISIBLE
         getmButtonReset.visibility = View.INVISIBLE
